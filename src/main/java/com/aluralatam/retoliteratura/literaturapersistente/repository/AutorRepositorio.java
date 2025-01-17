@@ -17,7 +17,7 @@ public interface AutorRepositorio extends JpaRepository<Autor,Long> {
 
     Optional<Autor> findBynombre(String nombre);
 
-    @Query("SELECT l.lenguajes FROM Libro l WHERE l.lenguajes LIKE :lenguajes")
-    List<Libro> buscarLibrosLenguajes(String lenguajes);
+    @Query("SELECT a FROM Autor a JOIN a.libros WHERE a.nombre ILIKE %:nombre%")
+    Optional<Autor> autorPorNombre(String nombre);
 
 }

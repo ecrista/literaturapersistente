@@ -1,6 +1,5 @@
 package com.aluralatam.retoliteratura.literaturapersistente.repository;
 
-import com.aluralatam.retoliteratura.literaturapersistente.modelos.Autor;
 import com.aluralatam.retoliteratura.literaturapersistente.modelos.Libro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +15,6 @@ public interface LibroRepositorio extends JpaRepository<Libro,Integer> {
     @Query("SELECT l FROM Libro l JOIN l.autores a WHERE l.lenguajes = :lenguajes")
     List<Libro> buscarLibrosLenguajes(String lenguajes);
 
+    List<Libro> findTop10ByOrderByDescargasDesc();
 
 }

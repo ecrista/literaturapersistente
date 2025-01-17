@@ -10,6 +10,7 @@ import com.aluralatam.retoliteratura.literaturapersistente.servicios.ConvierteDa
 import com.aluralatam.retoliteratura.literaturapersistente.servicios.Servicios;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner teclado = new Scanner(System.in);
@@ -77,12 +78,18 @@ public class Principal {
 
             var opcion = -1;
             while (opcion != 0) {
+                try {
+
                 var menu = """
                     1 - Buscar Libro por Titulo
                     2 - Listar libros registrados
                     3 - Listar autores registrados
                     4 - Listar autores vivos en un determinado año
                     5 - Listar libros por idioma
+                    6 - Buscar Autor por Nombre
+                    7 - Ver Estadisticas Generales de descargas
+                    8 - Ver Top 10 libros más descargados
+                    
                     
                     0 - Salir
                     """;
@@ -106,17 +113,80 @@ public class Principal {
                     case 5:
                         mostrarLibrosIdioma();
                         break;
+                        case 6:
+                        buscarAutorPorNombre();
+                        break;
+                        case 7:
+                        mostrarEstadisticasDescargas();
+                        break;
+                        case 8:
+                        top10LibrosDescargados();
+                        break;
                     case 0:
                         System.out.println("Cerrando la aplicación...");
                         break;
                     default:
                         System.out.println("Opción inválida");
                 }
+                }catch (InputMismatchException e){
+                    System.out.println("""
+                            ------------------------------------
+                            Ingreso de una opcion invalida
+                            Cerrando la aplicacion....
+                            ------------------------------------
+                            """);
+                    opcion=0;
+                }
             }
 
         }
 
+    private void top10LibrosDescargados() {
+        libros = repositorio.findTop10ByOrderByDescargasDesc();
+        String textoLibro="""
+                        ------- LIBRO ----------
+                        Titulo: %s
+                        Autor: %s
+                        Idioma: %s
+                        Numero de Descargas: %d
+                        ------------------------
+                        """;
+        if (!libros.isEmpty()){
+            libros.forEach(l-> System.out.printf((textoLibro) + "%n",l.getNombre(),l.getAutores().getNombre(),l.getLenguajes(),l.getDescargas()));
+        }else{
+            System.out.println("""
+                    ---------------------------------------------------------
+                    No se encontro ningun Autor registrado 
+                    ---------------------------------------------------------
+                    """);
+        }
+    }
 
+    private void mostrarEstadisticasDescargas() {
+        libros = repositorio.findAll();
+        String textoLibro="""
+                        ------- Estadisticas Descargas ----------
+                        Cantidad media de descargas: %.2f
+                        Cantidad maxima de descargas: %.2f
+                        Cantidad minima de descargas: %.2f
+                        Cantidad de registros evaluados para calcular las estadisticas: %d
+                        -----------------------------------------
+                        """;
+        if (!libros.isEmpty()){
+            DoubleSummaryStatistics estadisticas=libros.stream()
+                    .filter(d-> d.getDescargas()>0)
+                    .collect(Collectors.summarizingDouble(Libro::getDescargas));
+            System.out.printf((textoLibro) + "%n",estadisticas.getAverage(),estadisticas.getMax(),estadisticas.getMin(),estadisticas.getCount());
+        }else{
+            System.out.println("""
+                    ---------------------------------------------------------
+                    No se encontro ningun Libro registrado 
+                    ---------------------------------------------------------
+                    """);
+        }
+
+
+    }
 
 
     private void buscarLibroWeb() {
@@ -301,6 +371,31 @@ public class Principal {
 
 
 
+    }
+    private void buscarAutorPorNombre(){
+        System.out.println("Escribe el nombre del autor que deseas buscar");
+        var nombreAutor = teclado.nextLine();
+        Optional<Autor> escritor=autorRepositorio.autorPorNombre(nombreAutor);
+        if (escritor.isPresent()){
+            Autor escritorEncontrado=escritor.get();
+            List<String> librosAutor=escritorEncontrado.getLibros().stream()
+                    .map(Libro::getNombre)
+                    .toList();
+            var textoAutor= String.format("""
+                            Autor: %s
+                            Fecha de Nacimiento: %d
+                            Fecha de Fallecimiento: %d
+                            Libros: %s
+                            """,escritorEncontrado.getNombre(),escritorEncontrado.getFechaNacimiento(),escritorEncontrado.getFechaMuerte(),librosAutor);
+            System.out.println(textoAutor);
+
+        }else{
+            System.out.printf("""
+                    ---------------------------------------------------------
+                    No se encontro ningun Autor registrado con el nombre: %s
+                    ---------------------------------------------------------
+                    %n""",nombreAutor);
+        }
     }
 
 
