@@ -28,54 +28,6 @@ public class Principal {
     }
 
     public void MostrarMenu(){
-//        var json=consumoApi.obtenerDatos(URL_BASE);
-//        var datos=convertirDatos.obtenerDatos(json, DatosListaLibros.class);
-//        System.out.println(datos);
-//        System.out.println("Datos");
-//
-//        List<Libro> listaDeLibros= datos.libros().stream()
-//                .map(Libro::new)
-//                .toList();
-//
-//        listaDeLibros.stream()
-//                .limit(10)
-//                .forEach(System.out::println);
-//
-//
-//        System.out.println("\n Top 10 libros mas descargados");
-//        listaDeLibros.stream()
-//                .sorted(Comparator.comparing(Libro::getDescargas).reversed())
-//                .limit(10)
-//                .map(l->l.getNombre().toUpperCase())
-//                .forEach(System.out::println);
-//
-//        System.out.println("Ingrese un nombre de un libro a buscar: ");
-//        var nombreLibro=teclado.nextLine();
-//
-//        json=consumoApi.obtenerDatos(URL_BASE+"?search="+nombreLibro.replace(" ","+"));
-//        var datosBusqueda=convertirDatos.obtenerDatos(json,DatosListaLibros.class);
-//
-//        Optional<DatosLibros> libroBuscado = datosBusqueda.libros().stream()
-//                .filter(l->l.titulo().toUpperCase().contains(nombreLibro.toUpperCase()))
-//                .findFirst();
-//
-//        if(libroBuscado.isPresent()){
-//            System.out.println(" Libro encontrado");
-//            System.out.println("Los datos son: " + libroBuscado.get());
-//        } else {
-//            System.out.println("Libro no encontrado");
-//        }
-//
-//        //Estadisticas
-//
-//        DoubleSummaryStatistics estadisticas=listaDeLibros.stream()
-//                .filter(d-> d.getDescargas()>0)
-//                .collect(Collectors.summarizingDouble(Libro::getDescargas));
-//        System.out.println("Cantidad media de descargas: " + estadisticas.getAverage());
-//        System.out.println("Cantidad maxima de descargas:" + estadisticas.getMax());
-//        System.out.println("Cantidad minima de descargas: " + estadisticas.getMin());
-//        System.out.println("Cantidad de registros evaluados para calcular las estadisticas: " + estadisticas.getCount());
-
             var opcion = -1;
             while (opcion != 0) {
                 try {
